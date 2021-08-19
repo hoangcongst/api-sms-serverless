@@ -1,0 +1,19 @@
+service: app
+provider:
+  name: aws
+  runtime: provided.al2
+  region: ap-southeast-1
+plugins:
+  - ./vendor/bref/bref
+functions:
+  app:
+    memorySize: 128
+    environment:
+      TELEGRAM_TOKEN: ${ssm:/api-sms-serverless/telegram_token}
+      TELEGRAM_CHAT_ID: ${ssm:/api-sms-serverless/telegram_chatid}
+      TOKEN: ${ssm:/api-sms-serverless/token}
+    handler: index.php
+    layers:
+      - ${bref:layer.php-74-fpm}
+    events:
+      - httpApi: '*'
